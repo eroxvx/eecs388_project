@@ -4,6 +4,8 @@
 
 #include "eecs388_lib.h"
 
+#define Flashing_period 100
+
 void auto_brake(int devid)
 {
     // Task-1: 
@@ -14,36 +16,40 @@ void auto_brake(int devid)
 
     while (1) {
 
-        if ('Y' == ser_read(0) && 'Y' == ser_read(0)) {
-            dist = ser_read(0);
-            dist |= ser_read(0) << 8;
+    if ('Y' == ser_read(0) && 'Y' == ser_read(0)) {
+        dist = ser_read(0);
+        dist |= ser_read(0) << 8;
 
-            for(int i = 0; i < 5; i++) {
-                ser_read(0);
-            }
+        for(int i = 0; i < 5; i++) {
+            ser_read(0);
+        }
 
-            if (dist > 200) {
-                gpio_write(RED_LED, OFF);
-                gpio_write(GREEN_LED, ON);
-            } 
+        if (dist > 200) {
+            gpio_write(RED_LED, OFF);
+            gpio_write(GREEN_LED, ON);
+        } 
 
-            else if (dist > 100) {
-                gpio_write(RED_LED, ON);
-                gpio_write(GREEN_LED, ON);
-            }
+        else if (dist > 100) {
+            gpio_write(RED_LED, ON);
+            gpio_write(GREEN_LED, ON);
+        }
 
-            else if (dist > 60) {
-                gpio_write(RED_LED, ON);
-                gpio_write(GREEN_LED, OFF);
-            }
+        else if (dist > 60) {
+            gpio_write(RED_LED, ON);
+            gpio_write(GREEN_LED, OFF);
+        }
 
-            else {
-                gpio_write(RED_LED, OFF);
-                gpio_write(GREEN_LED, OFF);
-            }
+        else {
+            for (int i = 0; i < 10; i++) { 
+                    gpio_write(RED_LED, ON);
+                    delay(Flashing_period / 2);
+                    gpio_write(RED_LED, OFF);
+                    delay(Flashing_period / 2);
+                }
+        }
 
-            printf("Measured distance: %d cm\n", dist);
-        }   
+        printf("Measured distance: %d cm\n", dist);
+    }
     }
 }
 
