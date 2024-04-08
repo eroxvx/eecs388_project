@@ -9,6 +9,42 @@ void auto_brake(int devid)
     // Task-1: 
     // Your code here (Use Lab 02 - Lab 04 for reference)
     // Use the directions given in the project document
+
+    uint16_t dist = 0;
+
+    while (1) {
+
+        if ('Y' == ser_read(0) && 'Y' == ser_read(0)) {
+            dist = ser_read(0);
+            dist |= ser_read(0) << 8;
+
+            for(int i = 0; i < 5; i++) {
+                ser_read(0);
+            }
+
+            if (dist > 200) {
+                gpio_write(RED_LED, OFF);
+                gpio_write(GREEN_LED, ON);
+            } 
+
+            else if (dist > 100) {
+                gpio_write(RED_LED, ON);
+                gpio_write(GREEN_LED, ON);
+            }
+
+            else if (dist > 60) {
+                gpio_write(RED_LED, ON);
+                gpio_write(GREEN_LED, OFF);
+            }
+
+            else {
+                gpio_write(RED_LED, OFF);
+                gpio_write(GREEN_LED, OFF);
+            }
+
+            printf("Measured distance: %d cm\n", dist);
+        }   
+    }
 }
 
 int read_from_pi(int devid)
