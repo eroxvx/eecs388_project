@@ -55,23 +55,25 @@ void auto_brake(int devid)
 
 int read_from_pi(int devid)
 {
-    // Task-2: 
-    // You code goes here (Use Lab 09 for reference)
-    // After performing Task-2 at dnn.py code, modify this part to read angle values from Raspberry Pi.
-    // initialize UART channels
-    ser_setup(0); // uart0 (debug)
-    ser_setup(1); // uart1 (raspberry pi)
-    
-    printf("Setup completed.\n");
-    printf("Begin the main loop.\n");
+// Task-2:
+// You code goes here (Use Lab 09 for reference)
+// After performing Task-2 at dnn.py code, modify this part to read angle values from Raspberry Pi.
 
-    while (1) {
+    char buffer[10];
+    int angle, read_data;
+
+   
+    read_data = ser_readline(devid, sizeof(buffer), buffer);
+
     
-        if (ser_read(1)){
-            char buffer[10];
-            int value, read_data;
-            read_data = ser_readline(1, 10, buffer);
-            printf ("From PI to HIFIVE: read(%d) => %s \n", read_data, buffer);
+    if (read_data > 0) {
+        sscanf(buffer, "%d", &angle);
+        printf("From PI to HIFIVE: read(%d) => %d \n", read_data, angle);
+        return angle;
+    } else {
+        
+        return -1; 
+    }
 }
 
 void steering(int gpio, int pos)
@@ -80,17 +82,7 @@ void steering(int gpio, int pos)
     // Your code goes here (Use Lab 05 for reference)
     // Check the project document to understand the task
 
-    int gpio = PIN_19;
-    gpio_mode(gpio, OUTPUT);
-    
-    while (1) {
-
-        for (int pos = 0; pos <= 180; pos += 30) {
-        printf("pos: %d (degree)\n", pos);
-        for (int i = 0; i < 100; i++)
-            servo(gpio, pos);
-        }
-    }
+    servo(gpio, pos);
     
 }
 
