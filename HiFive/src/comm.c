@@ -67,7 +67,7 @@ int read_from_pi(int devid)
 
     
     if (read_data > 0) {
-        sscanf(buffer, "%d", &angle);
+        sscanf(buffer, "%f", &angle);
         printf("From PI to HIFIVE: read(%d) => %d \n", read_data, angle);
         return angle;
     } else {
